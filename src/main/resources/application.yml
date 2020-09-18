@@ -1,0 +1,49 @@
+
+server:
+  port: 8080
+spring:
+  datasource:
+    name: mysql
+    url: jdbc:mysql://127.0.0.1:3306/dashboard?serverTimezone=GMT&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+      # ʹ��druid����Դ
+    type: com.alibaba.druid.pool.DruidDataSource
+      # ��չ���
+      # ���ͳ���õ�filter:stat ��־�õ�filter:log4j ����sqlע���filter:wall
+    filters: stat
+      # ������ӳ�����
+    maxActive: 20
+      # ��ʼ��ʱ�����������ӵĸ�������ʼ����������ʾ����init���������ߵ�һ��getConnectionʱ
+    initialSize: 1
+      # ��ȡ����ʱ���ȴ�ʱ�䣬��λ����
+    maxWait: 60000
+      # ��С���ӳ�����
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+      # ���ӱ��ֿ��ж�����������ʱ��
+    minEvictableIdleTimeMillis: 300000
+      # ������������Ƿ���Ч��sql��Ҫ����һ����ѯ���
+      # ���validationQueryΪnull��testOnBorrow��testOnReturn��testWhileIdle������������
+    validationQuery: select count(1) from 'table'
+      # �������ӵ�ʱ���⣬�������ʱ�����timeBetweenEvictionRunsMillis��ִ��validationQuery��������Ƿ���Ч
+    testWhileIdle: true
+      # ��������ʱִ��validationQuery��������Ƿ���Ч������������ûή������
+    testOnBorrow: false
+      # �黹����ʱִ��validationQuery��������Ƿ���Ч������������ûή������
+    testOnReturn: false
+      # �Ƿ񻺴�preparedStatement����PSCache
+    poolPreparedStatements: false
+      # Ҫ����PSCache���������ô���0��������0ʱ��poolPreparedStatements�Զ������޸�Ϊtrue
+    maxOpenPreparedStatements: -1
+
+  pagehelper:
+    # ���ݿ�ķ���
+    helperDialect: mysql
+    # ���ú��������pageNum < 1���ѯ��һҳ�����pageNum > pages���ѯ���һҳ
+    reasonable: true
+
+  mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.spring.test.entity
