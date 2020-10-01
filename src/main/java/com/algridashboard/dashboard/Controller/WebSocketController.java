@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 @RestController
-@RequestMapping("/socket")
+@RequestMapping("/dash")
 public class WebSocketController {
     //	@Autowired
 //	private RedisOperator redisOperator;
-    @RequestMapping(value="/sendAll", method=RequestMethod.GET)
+   // @RequestMapping(value="/sendAll", method=RequestMethod.GET)
     /**
      * 群发消息内容
      * @param message
@@ -18,13 +18,18 @@ public class WebSocketController {
      */
     String sendAllMessage(@RequestParam(required=true) String message){
         try {
-            WebSocketServer.BroadCastInfo(message);
+            for(int i=0;i<4;i++){
+                WebSocketServer.BroadCastInfo(message+i);
+                System.out.println(message+i);
+            }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "ok";
     }
-    @RequestMapping(value="/sendOne", method=RequestMethod.GET)
+   // @RequestMapping(value="/analytics", method=RequestMethod.GET)
     /**
      * 指定会话ID发消息
      * @param message 消息内容

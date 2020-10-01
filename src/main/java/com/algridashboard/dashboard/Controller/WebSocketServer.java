@@ -1,6 +1,9 @@
 package com.algridashboard.dashboard.Controller;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,6 +14,11 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import com.algridashboard.dashboard.model.AllChart;
+import com.algridashboard.dashboard.util.JsonResult;
+import com.alibaba.fastjson.JSON;
+
+import com.algridashboard.dashboard.model.Humidity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -36,12 +44,27 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(Session session) throws IOException {
         SessionSet.add(session);
+        //Humidity hu=new Humidity();
+       // hu.setHumidity("0");
+       // hu.setTime(new Date(2017-02-17));
+        JsonResult r=new JsonResult();
+        AllChart all=new AllChart();
+        all.setPerscentage("12.5%");
+        all.setValue("333");
+        all.setLabel("label111");
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("label","session");
+        map.put("dataset",all);
+        r.setSmallStats(map);
+        r.setMsg("message");
         int personCount = OnlineCount.incrementAndGet(); // 在线数加1
         System.out.println("有连接加入，当前连接数为："+personCount);
         log.info("有连接加入，当前连接数为：{}", personCount);
 //		SendMessage(session, "连接成功,当前连接人数为:"+personCount);
 //		SendMessage(session,String.valueOf(personCount));
         BroadCastInfo(String.valueOf(OnlineCount.get()));
+        BroadCastInfo(JSON.toJSONString(r));
+       // BroadCastInfo(JSON.toJSONString(hu));
     }
 
     /**
@@ -66,19 +89,23 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         log.info("来自客户端的消息：{}",message);
+
 //		System.out.println("来自客户端的消息:"+message);
 //		SendMessage(session, "收到消息，消息内容："+message);
         if(message.equals("管理平台")) {
             System.out.println("收到平台类型:"+message);
+            BroadCastInfo(String.valueOf(OnlineCount.get()-1));
         }
-//		if(message.equals("新增人数")) {
-//			System.out.println("打开页面:"+message);
-//			BroadCastInfo(String.valueOf(OnlineCount.get()+1));
-//		}
+		if(message.equals("新增人数")) {
+			System.out.println("打开页面:"+message);
+			BroadCastInfo(String.valueOf(OnlineCount.get()+1));
+            BroadCastInfo(String.valueOf(OnlineCount.get()+2));
+		}
         if(message.equals("关闭页面")) {
             System.out.println("收到关闭页面:"+message);
             //在线数加-1
             BroadCastInfo(String.valueOf(OnlineCount.get()-1));
+
         }
     }
 
