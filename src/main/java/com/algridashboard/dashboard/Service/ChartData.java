@@ -1,9 +1,7 @@
 package com.algridashboard.dashboard.Service;
 
 import com.algridashboard.dashboard.mapper.TemperatureMapper;
-import com.algridashboard.dashboard.model.AllChart;
-import com.algridashboard.dashboard.model.Datasets;
-import com.algridashboard.dashboard.model.Temperature;
+import com.algridashboard.dashboard.model.*;
 import com.algridashboard.dashboard.util.JsonResult;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,38 @@ public JsonResult getsmallchart (){
     return r;
 
     }
+    public JsonResult getsessionchart (){
+        JsonResult r=new JsonResult();
+        SessionChart chart=new SessionChart();
 
+        String []labels={"09:00 PM",
+                "10:00 PM",
+                "11:00 PM",
+                "12:00 PM",
+                "13:00 PM",
+                "14:00 PM",
+                "15:00 PM",
+                "16:00 PM",
+                "17:00 PM"};
+        SessionDataset datas1=new SessionDataset();
+        SessionDataset datas2=new SessionDataset();
+        Integer[] data1={1,0, 10, 30, 10, 42, 5, 15, 5};
+        Integer[] data2={5,23, 5, 10, 5, 5, 30, 2, 10};
+
+        datas1.setAll(data1,"Today","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)", "#ffffff","rgba(0,123,255,1)",1.5);
+        datas2.setAll(data2,"Yesterday","start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
+
+        SessionDataset [] dataset={datas1,datas2};
+        chart.setAll(labels,dataset);
+
+        Map<String, Object> map = new HashMap<>(2);
+
+        map.put("chartData",chart);
+        r.setSmallStats(map);
+        r.setMsg("message");
+        return r;
+
+    }
 
 
 }

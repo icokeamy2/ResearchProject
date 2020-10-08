@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
         public JsonResult getById(){
             return small.getsmallchart();
         }
+    @RequestMapping("/getSessionChart")
+    @ResponseBody
+    public JsonResult getSessionChart(){
+        return small.getsessionchart();
+    }
 
     }
 
