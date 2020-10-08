@@ -15,6 +15,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 import com.algridashboard.dashboard.model.AllChart;
+import com.algridashboard.dashboard.model.Datasets;
 import com.algridashboard.dashboard.util.JsonResult;
 import com.alibaba.fastjson.JSON;
 
@@ -47,23 +48,14 @@ public class WebSocketServer {
         //Humidity hu=new Humidity();
        // hu.setHumidity("0");
        // hu.setTime(new Date(2017-02-17));
-        JsonResult r=new JsonResult();
-        AllChart all=new AllChart();
-        all.setPerscentage("12.5%");
-        all.setValue("333");
-        all.setLabel("label111");
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("label","session");
-        map.put("dataset",all);
-        r.setSmallStats(map);
-        r.setMsg("message");
+
         int personCount = OnlineCount.incrementAndGet(); // 在线数加1
         System.out.println("有连接加入，当前连接数为："+personCount);
         log.info("有连接加入，当前连接数为：{}", personCount);
 //		SendMessage(session, "连接成功,当前连接人数为:"+personCount);
 //		SendMessage(session,String.valueOf(personCount));
         BroadCastInfo(String.valueOf(OnlineCount.get()));
-        BroadCastInfo(JSON.toJSONString(r));
+
        // BroadCastInfo(JSON.toJSONString(hu));
     }
 
