@@ -1,6 +1,7 @@
 package com.algridashboard.dashboard.Controller;
 
 import com.algridashboard.dashboard.Service.ChartData;
+import com.algridashboard.dashboard.Service.Warning;
 import com.algridashboard.dashboard.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
     public class ChartController {
         @Autowired
         private ChartData small;
+        @Autowired
+        private Warning warn;
 
         @RequestMapping("/getSmallChart")
         @ResponseBody
@@ -23,6 +26,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
     @ResponseBody
     public JsonResult getSessionChart(){
         return small.getsessionchart();
+    }
+
+    @RequestMapping("/getWarning")
+    @ResponseBody
+    public JsonResult getWarning(){
+        return warn.getWarning();
     }
 
     }
