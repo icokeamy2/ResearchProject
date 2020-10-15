@@ -21,7 +21,7 @@ public class Warning {
         WarningTable warn=new WarningTable();
         WarningTable warn2=new WarningTable();
         WarningTable warn3=new WarningTable();
-        warn.setAll("Irriagate","15 November 2020 20:32","Suggestion");
+        warn.setAll("Irrigate","15 November 2020 20:32","Suggestion");
         warn2.setAll("Abnormal data volume","16 November 2020 09:15","Warning");
         warn3.setAll("Abnormal sensor location","16 November 2020 10:25","Danger");
         latestOrdersData.add(warn);

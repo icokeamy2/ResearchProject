@@ -34,6 +34,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
         return warn.getWarning();
     }
 
+    @RequestMapping("/getRanking")
+    @ResponseBody
+    public JsonResult getRanking(){
+        return small.getRanking();
+    }
+
     }
 
 

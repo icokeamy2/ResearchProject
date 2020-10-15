@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,35 @@ public JsonResult getsmallchart (){
         Map<String, Object> map = new HashMap<>(2);
 
         map.put("chartData",chart);
+        r.setSmallStats(map);
+        r.setMsg("message");
+        return r;
+
+    }
+
+
+
+    public JsonResult getRanking (){
+        JsonResult r=new JsonResult();
+        ArrayList<referralData> referralData=new ArrayList<>();
+        referralData rank1=new referralData();
+        referralData rank2=new referralData();
+        referralData rank3=new referralData();
+        referralData rank4=new referralData();
+        rank1.setAll("5","Irrigate");
+        rank2.setAll("2","Abnormal data volume");
+        rank3.setAll("1","Abnormal sensor location");
+        rank4.setAll("1","Abnormal data delay");
+        referralData.add(rank1);
+        referralData.add(rank2);
+        referralData.add(rank3);
+        referralData.add(rank4);
+
+
+
+        Map<String, Object> map = new HashMap<>(2);
+
+        map.put("referralData",referralData);
         r.setSmallStats(map);
         r.setMsg("message");
         return r;
