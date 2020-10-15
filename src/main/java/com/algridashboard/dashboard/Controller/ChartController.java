@@ -3,8 +3,10 @@ package com.algridashboard.dashboard.Controller;
 import com.algridashboard.dashboard.Service.ChartData;
 import com.algridashboard.dashboard.Service.Warning;
 import com.algridashboard.dashboard.util.JsonResult;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,8 +26,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
         }
     @RequestMapping("/getSessionChart")
     @ResponseBody
-    public JsonResult getSessionChart(){
-        return small.getsessionchart();
+    public JsonResult getSessionChart(@RequestBody JSONObject jsonObject){
+        String type = jsonObject.getString("type");
+        String starttime = jsonObject.getString("starttime");
+        String endtime = jsonObject.getString("endtime");
+
+        return small.getsessionchart(type,starttime,endtime);
     }
 
     @RequestMapping("/getWarning")
@@ -40,6 +46,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
         return small.getRanking();
     }
 
+    @RequestMapping("/getPercentChart")
+    @ResponseBody
+    public JsonResult getPercentChart(){
+        JsonResult chart=small.getPercentChart();
+
+        return chart;
     }
+    @RequestMapping("/getMap")
+    @ResponseBody
+    public JsonResult getMap(){
+        JsonResult chart=small.getMap();
+        return chart;
+    }
+
+
+}
 
 

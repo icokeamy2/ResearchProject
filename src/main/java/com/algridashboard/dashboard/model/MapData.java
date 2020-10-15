@@ -2,25 +2,25 @@ package com.algridashboard.dashboard.model;
 
 public class MapData {
     private String name;
-    private location lo;
+    private location location;
 
     public location getLo() {
-        return lo;
+        return location;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setLo(location lo) {
-        this.lo = lo;
+    public void setLo(location location) {
+        this.location = location;
     }
 
     public void setName(String name) {
         this.name = name;
     }
-    public void setAll(String name,location lo) {
+    public void setAll(String name,location location) {
         this.name = name;
-        this.lo = lo;
+        this.location = location;
     }
 }

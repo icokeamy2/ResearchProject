@@ -48,7 +48,7 @@ public JsonResult getsmallchart (){
     return r;
 
     }
-    public JsonResult getsessionchart (){
+    public JsonResult getsessionchart (String type, String starttime,String endtime){
         JsonResult r=new JsonResult();
         SessionChart chart=new SessionChart();
 
@@ -67,7 +67,14 @@ public JsonResult getsmallchart (){
         Integer[] data2={5,23, 5, 10, 5, 5, 30, 2, 10};
 
         datas1.setAll(data1,"Today","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)", "#ffffff","rgba(0,123,255,1)",1.5);
-        datas2.setAll(data2,"Yesterday","start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
+        if(starttime!="1"){
+            datas2.setAll(data2,"Yesterday","start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
+
+        }else{
+            datas2.setAll(data2,"OOOOOO","start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
+
+
+        }
 
         SessionDataset [] dataset={datas1,datas2};
         chart.setAll(labels,dataset);
@@ -109,6 +116,43 @@ public JsonResult getsmallchart (){
         return r;
 
     }
+
+    public JsonResult getPercentChart (){
+        JsonResult r=new JsonResult();
+        String[] labels={"Temperature", "Humidity", "Soil micronutrients"};
+        Double[] data={50.0, 50.0, 0.0};
+        ArrayList<roundDataSet> datasets=new ArrayList<>();
+        roundDataSet datas=new roundDataSet();
+        roundChart roundchartData=new roundChart();
+        datas.setData(data);
+        datasets.add(datas);
+
+
+        roundchartData.setAll(labels,datasets);
+        System.out.println(roundchartData);
+        Map<String, Object> map = new HashMap<>(2);
+
+        map.put("roundchartData",roundchartData);
+        r.setSmallStats(map);
+        r.setMsg("message");
+        return r;
+
+    }
+    public JsonResult getMap (){
+        JsonResult r=new JsonResult();
+        location loca=new location();
+        loca.setAll(42.3954,2.162);
+        MapData location=new MapData();
+        location.setAll("Sensor",loca);
+        Map<String, Object> map = new HashMap<>(2);
+
+        map.put("location",location);
+        r.setSmallStats(map);
+        r.setMsg("message");
+        return r;
+
+    }
+
 
 
 }
