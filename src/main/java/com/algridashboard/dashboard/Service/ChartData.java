@@ -1,15 +1,12 @@
 package com.algridashboard.dashboard.Service;
 
-import com.algridashboard.dashboard.mapper.TemperatureMapper;
 import com.algridashboard.dashboard.model.*;
 import com.algridashboard.dashboard.util.JsonResult;
-import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service("test")
@@ -67,7 +64,7 @@ public JsonResult getsmallchart (){
         Integer[] data2={5,23, 5, 10, 5, 5, 30, 2, 10};
 
         datas1.setAll(data1,"Today","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)", "#ffffff","rgba(0,123,255,1)",1.5);
-        if(starttime!="1"){
+        if(!starttime.equals("1")){
             datas2.setAll(data2,"Yesterday","start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
 
         }else{

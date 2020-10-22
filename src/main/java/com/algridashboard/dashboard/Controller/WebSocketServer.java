@@ -1,9 +1,6 @@
 package com.algridashboard.dashboard.Controller;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,12 +11,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import com.algridashboard.dashboard.model.AllChart;
-import com.algridashboard.dashboard.model.Datasets;
-import com.algridashboard.dashboard.util.JsonResult;
-import com.alibaba.fastjson.JSON;
-
-import com.algridashboard.dashboard.model.Humidity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

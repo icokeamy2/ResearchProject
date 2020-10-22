@@ -4,9 +4,10 @@ server:
 spring:
   datasource:
     name: mysql
-    url: jdbc:mysql://127.0.0.1:3306/dashboard?serverTimezone=GMT&useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: 123456
+    #url: jdbc:mysql://127.0.0.1:3306/dashboard?serverTimezone=GMT&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://rm-uf6sias36n54g55k3go.mysql.rds.aliyuncs.com:3306/agridata
+    username: icokeamy
+    password: Zyf423065
     driver-class-name: com.mysql.jdbc.Driver
       # ʹ��druid����Դ
     type: com.alibaba.druid.pool.DruidDataSource

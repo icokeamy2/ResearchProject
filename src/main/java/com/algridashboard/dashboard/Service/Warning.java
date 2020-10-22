@@ -1,15 +1,12 @@
 package com.algridashboard.dashboard.Service;
 
-import com.algridashboard.dashboard.mapper.TemperatureMapper;
 import com.algridashboard.dashboard.model.*;
 import com.algridashboard.dashboard.util.JsonResult;
-import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 @Service("warn")
 public class Warning {
