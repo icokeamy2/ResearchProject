@@ -1,5 +1,6 @@
 package com.algridashboard.dashboard.Service;
 
+import com.algridashboard.dashboard.mapper.TemperatureMapper;
 import com.algridashboard.dashboard.model.*;
 import com.algridashboard.dashboard.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,10 @@ public class ChartData {
 
     public  Temperature getById(){
         Temperature tmp=new Temperature();
-        tmp.setTemp("22");
+        tmp.setTemperature(27.0);
         tmp.setTime("22");
-        temperatureMapper.insert(tmp);
+        Temperature tt=temperatureMapper.selectByPrimaryKey(1);
+        System.out.println(tt);
        return tmp;
     }
 
