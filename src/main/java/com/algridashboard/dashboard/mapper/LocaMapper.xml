@@ -68,4 +68,35 @@
       time = #{time,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <select id="selectCount" resultType="java.lang.Integer"  parameterType="java.lang.String" >
+        select COUNT(*)
+
+        from location
+        where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
+    </select>
+
+  <select id="totalCount" resultType="java.lang.Integer"  >
+        select COUNT(*)
+
+        from location
+
+    </select>
+
+  <select id="selectNewest5" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from location
+    order by id desc
+    limit 5
+  </select>
+
+  <select id="selectByTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from location
+    where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
+    order by id asc
+  </select>
 </mapper>

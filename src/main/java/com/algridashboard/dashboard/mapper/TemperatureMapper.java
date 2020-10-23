@@ -15,4 +15,8 @@ public interface TemperatureMapper extends BaseMapper {
     int updateByPrimaryKeySelective(Temperature record);
 
     int updateByPrimaryKey(Temperature record);
+    Temperature[] selectNewest5();
+    int selectCount(String starttime,String endtime);
+    Temperature[] selectByTime(String starttime,String endtime);
+    int totalCount();
 }

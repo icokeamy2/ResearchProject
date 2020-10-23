@@ -1,6 +1,9 @@
 package com.algridashboard.dashboard.Service;
 
+import com.algridashboard.dashboard.mapper.HumidityMapper;
+import com.algridashboard.dashboard.mapper.LocaMapper;
 import com.algridashboard.dashboard.mapper.TemperatureMapper;
+import com.algridashboard.dashboard.mapper.WarnMapper;
 import com.algridashboard.dashboard.model.*;
 import com.algridashboard.dashboard.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,12 @@ import java.util.Map;
 public class ChartData {
     @Autowired
     private TemperatureMapper temperatureMapper;
+    @Autowired
+    private HumidityMapper humidityMapper;
+    @Autowired
+    private WarnMapper warnMapper;
+    @Autowired
+    private LocaMapper locaMapper;
 
 
     public  Temperature getById(){
@@ -26,16 +35,19 @@ public class ChartData {
     }
 
 public JsonResult getsmallchart (){
+        String humicount=Integer.toString(humidityMapper.selectCount("1603431060000","1603431081500"));
+        Humidity[] humilist=humidityMapper.selectByTime("1603431060000","1603431081500");
+
     JsonResult r=new JsonResult();
     AllChart all1 = new AllChart();
     AllChart all2=new AllChart();
     String []labels={null,null,null,null};
     Datasets datas=new Datasets();
-    Integer[] data={9, 9, 9, 3};
-    datas.setAll(data,"Today","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)");
+    Integer[] data={9, 9, 9, 9};
+    datas.setAll(data,"All","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)");
     Datasets [] dataset={datas};
-    all1.setAll("label111","333","12.5%",false,true,labels,dataset);
-    all2.setAll("label111","333","12.5%",false,true,labels,dataset);
+    all1.setAll("Humidity",humicount,"0%",true,false,labels,dataset);
+    all2.setAll("Temperature","333","0%",false,true,labels,dataset);
     AllChart []all= {all1,all2};
 
 

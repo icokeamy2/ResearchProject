@@ -11,6 +11,10 @@ public interface HumidityMapper extends BaseMapper {
     int insertSelective(Humidity record);
 
     Humidity selectByPrimaryKey(Integer id);
+    Humidity[] selectNewest5();
+    int selectCount(String starttime,String endtime);
+    Humidity[] selectByTime(String starttime,String endtime);
+    int totalCount();
 
     int updateByPrimaryKeySelective(Humidity record);
 

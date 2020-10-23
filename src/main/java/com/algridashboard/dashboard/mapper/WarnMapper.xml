@@ -5,9 +5,10 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, content, type
+    id, content, type, time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -20,10 +21,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.algridashboard.dashboard.model.Warn" >
-    insert into warning (id, content, type
-      )
-    values (#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}
-      )
+    insert into warning (id, content, type, 
+      time)
+    values (#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{time,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.algridashboard.dashboard.model.Warn" >
     insert into warning
@@ -37,6 +38,9 @@
       <if test="type != null" >
         type,
       </if>
+      <if test="time != null" >
+        time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -47,6 +51,9 @@
       </if>
       <if test="type != null" >
         #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -59,13 +66,17 @@
       <if test="type != null" >
         type = #{type,jdbcType=VARCHAR},
       </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.algridashboard.dashboard.model.Warn" >
     update warning
     set content = #{content,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR}
+      type = #{type,jdbcType=VARCHAR},
+      time = #{time,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

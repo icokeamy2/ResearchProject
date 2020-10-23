@@ -15,4 +15,9 @@ public interface LocaMapper extends BaseMapper {
     int updateByPrimaryKeySelective(Loca record);
 
     int updateByPrimaryKey(Loca record);
+
+    Loca[] selectNewest5();
+    int selectCount(String starttime,String endtime);
+    Loca[] selectByTime(String starttime,String endtime);
+    int totalCount();
 }

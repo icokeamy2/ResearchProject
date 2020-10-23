@@ -1,5 +1,6 @@
 package com.algridashboard.dashboard.Service;
 
+import com.algridashboard.dashboard.mapper.TemperatureMapper;
 import com.algridashboard.dashboard.model.*;
 import com.algridashboard.dashboard.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
