@@ -98,4 +98,28 @@
     where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
     order by id asc
   </select>
+    <select id="selectTopByTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from temperature
+        where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
+        order by id desc
+        limit 1
+    </select>
+    <select id="selectHighestByTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from temperature
+        where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
+        order by temperature desc
+        limit 1
+    </select>
+    <select id="selectLowestByTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from temperature
+        where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
+        order by temperature asc
+        limit 1
+    </select>
 </mapper>

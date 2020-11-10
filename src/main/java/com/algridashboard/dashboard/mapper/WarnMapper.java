@@ -15,4 +15,6 @@ public interface WarnMapper extends BaseMapper {
     int updateByPrimaryKeySelective(Warn record);
 
     int updateByPrimaryKey(Warn record);
+
+    Warn[] selectNewest5();
 }

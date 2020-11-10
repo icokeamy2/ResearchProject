@@ -7,6 +7,8 @@ public class Warn {
 
     private String type;
 
+    private String time;
+
     public Integer getId() {
         return id;
     }
@@ -31,6 +33,14 @@ public class Warn {
         this.type = type == null ? null : type.trim();
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time == null ? null : time.trim();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -40,6 +50,7 @@ public class Warn {
         sb.append(", id=").append(id);
         sb.append(", content=").append(content);
         sb.append(", type=").append(type);
+        sb.append(", time=").append(time);
         sb.append("]");
         return sb.toString();
     }

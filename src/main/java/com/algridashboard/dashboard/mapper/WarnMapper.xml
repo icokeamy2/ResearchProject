@@ -79,4 +79,12 @@
       time = #{time,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectNewest5" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from warning
+    order by time desc
+    limit 5
+  </select>
 </mapper>

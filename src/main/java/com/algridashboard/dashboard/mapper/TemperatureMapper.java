@@ -18,5 +18,8 @@ public interface TemperatureMapper extends BaseMapper {
     Temperature[] selectNewest5();
     int selectCount(String starttime,String endtime);
     Temperature[] selectByTime(String starttime,String endtime);
+    Temperature selectTopByTime(String starttime,String endtime);
+    Temperature selectHighestByTime(String starttime,String endtime);
+    Temperature selectLowestByTime(String starttime,String endtime);
     int totalCount();
 }

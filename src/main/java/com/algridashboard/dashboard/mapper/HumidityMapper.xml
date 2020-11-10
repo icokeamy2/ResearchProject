@@ -46,6 +46,31 @@
         where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
         order by id asc
     </select>
+
+    <select id="selectTopByTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from humidity
+        where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
+        order by id desc
+        limit 1
+    </select>
+    <select id="selectHighestByTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from humidity
+        where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
+        order by humidity desc
+        limit 1
+    </select>
+    <select id="selectLowestByTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from humidity
+        where time between #{starttime,jdbcType=VARCHAR} and #{endtime,jdbcType=VARCHAR}
+        order by humidity asc
+        limit 1
+    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer"  >
     delete from humidity
     where id = #{id,jdbcType=INTEGER}

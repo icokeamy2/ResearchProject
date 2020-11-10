@@ -6,12 +6,13 @@ import com.algridashboard.dashboard.mapper.TemperatureMapper;
 import com.algridashboard.dashboard.mapper.WarnMapper;
 import com.algridashboard.dashboard.model.*;
 import com.algridashboard.dashboard.util.JsonResult;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service("test")
 public class ChartData {
@@ -35,20 +36,131 @@ public class ChartData {
     }
 
 public JsonResult getsmallchart (){
-        String humicount=Integer.toString(humidityMapper.selectCount("1603431060000","1603431081500"));
-        Humidity[] humilist=humidityMapper.selectByTime("1603431060000","1603431081500");
 
     JsonResult r=new JsonResult();
     AllChart all1 = new AllChart();
     AllChart all2=new AllChart();
+    AllChart all3=new AllChart();
+ //define time intervals
+    long currentTime = System.currentTimeMillis() ;
+    System.out.println(currentTime);
+    //currentTime=currentTime+150*60*1000;
+    //System.out.println(currentTime);
+    long[]intervals={currentTime-40000,currentTime-80000,currentTime-120000,currentTime-160000};
+
+    //humidity
+    Integer []humicount=new Integer[4];
+    humicount[3]=humidityMapper.selectCount(String.valueOf(intervals[0]),String.valueOf(currentTime));
+    humicount[2]=humidityMapper.selectCount(String.valueOf(intervals[1]),String.valueOf(intervals[0]));
+    humicount[1]=humidityMapper.selectCount(String.valueOf(intervals[2]),String.valueOf(intervals[1]));
+    humicount[0]=humidityMapper.selectCount(String.valueOf(intervals[3]),String.valueOf(intervals[2]));
+    String huminumber=String.valueOf(humidityMapper.totalCount());
     String []labels={null,null,null,null};
-    Datasets datas=new Datasets();
-    Integer[] data={9, 9, 9, 9};
-    datas.setAll(data,"All","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)");
-    Datasets [] dataset={datas};
-    all1.setAll("Humidity",humicount,"0%",true,false,labels,dataset);
-    all2.setAll("Temperature","333","0%",false,true,labels,dataset);
-    AllChart []all= {all1,all2};
+    Datasets humidatas=new Datasets();
+    humidatas.setAll(humicount,"All","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)");
+    Datasets [] humidataset={humidatas};
+    if(humicount[3]>humicount[2]){
+        double humipersentage= (double)(humicount[3]-humicount[2])/humicount[2]*100;
+        all1.setAll("Humidity",huminumber,humipersentage+"%",true,false,labels,humidataset);
+        if(humipersentage>200){
+            Warn humiwarn=new Warn();
+            humiwarn.setContent("Abnormal Humidity data increase"+humipersentage+"%");
+            humiwarn.setTime(String.valueOf(currentTime));
+            humiwarn.setType("Warning");
+            warnMapper.insert(humiwarn);
+        }
+    }
+    else if(humicount[3]<humicount[2]){
+        double humipersentage= (double)(humicount[2]-humicount[3])/humicount[2]*100;
+        all1.setAll("Humidity",huminumber,humipersentage+"%",false,true,labels,humidataset);
+        //lost data, trigger warning
+        if(humipersentage>80){
+            Warn humiwarn=new Warn();
+            humiwarn.setContent("Abnormal Humidity data decrease"+humipersentage+"%");
+            humiwarn.setTime(String.valueOf(currentTime));
+            humiwarn.setType("Warning");
+            warnMapper.insert(humiwarn);
+        }
+
+    }
+    else{
+        all1.setAll("Humidity",huminumber,"0%",true,false,labels,humidataset);
+
+    }
+//temperature
+    Integer []tempcount=new Integer[4];
+    tempcount[3]=temperatureMapper.selectCount(String.valueOf(intervals[0]),String.valueOf(currentTime));
+    tempcount[2]=temperatureMapper.selectCount(String.valueOf(intervals[1]),String.valueOf(intervals[0]));
+    tempcount[1]=temperatureMapper.selectCount(String.valueOf(intervals[2]),String.valueOf(intervals[1]));
+    tempcount[0]=temperatureMapper.selectCount(String.valueOf(intervals[3]),String.valueOf(intervals[2]));
+    String tempnumber=String.valueOf(temperatureMapper.totalCount());
+    Datasets tempdatas=new Datasets();
+    tempdatas.setAll(tempcount,"All","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)");
+    Datasets [] tempdataset={tempdatas};
+    if(tempcount[3]>tempcount[2]){
+        double temppersentage= (double)(tempcount[3]-tempcount[2])/tempcount[2]*100;
+        all2.setAll("Temperature",tempnumber,temppersentage+"%",true,false,labels,tempdataset);
+        if(temppersentage>200){
+            Warn humiwarn=new Warn();
+            humiwarn.setContent("Abnormal Temperature data increase"+temppersentage+"%");
+            humiwarn.setTime(String.valueOf(currentTime));
+            humiwarn.setType("Warning");
+            warnMapper.insert(humiwarn);
+        }
+    }
+    else if(tempcount[3]<tempcount[2]){
+        double temppersentage= (double)(tempcount[2]-tempcount[3])/tempcount[2]*100;
+        all2.setAll("Temperature",tempnumber,temppersentage+"%",false,true,labels,tempdataset);
+        if(temppersentage>80){
+            Warn humiwarn=new Warn();
+            humiwarn.setContent("Abnormal Temperature data decrease"+temppersentage+"%");
+            humiwarn.setTime(String.valueOf(currentTime));
+            humiwarn.setType("Warning");
+            warnMapper.insert(humiwarn);
+        }
+    }
+    else{
+        all2.setAll("Temperature",tempnumber,"0%",true,false,labels,tempdataset);
+    }
+
+    //location
+    Integer []loccount=new Integer[4];
+    loccount[3]=locaMapper.selectCount(String.valueOf(intervals[0]),String.valueOf(currentTime));
+    loccount[2]=locaMapper.selectCount(String.valueOf(intervals[1]),String.valueOf(intervals[0]));
+    loccount[1]=locaMapper.selectCount(String.valueOf(intervals[2]),String.valueOf(intervals[1]));
+    loccount[0]=locaMapper.selectCount(String.valueOf(intervals[3]),String.valueOf(intervals[2]));
+    String locnumber=String.valueOf(locaMapper.totalCount());
+    Datasets locpdatas=new Datasets();
+    locpdatas.setAll(loccount,"All","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)");
+    Datasets [] locdataset={locpdatas};
+    if(loccount[3]>loccount[2]){
+        double locpersentage= (double)(loccount[3]-loccount[2])/loccount[2]*100;
+        all3.setAll("Location",locnumber,locpersentage+"%",true,false,labels,locdataset);
+        if(locpersentage>200){
+            Warn humiwarn=new Warn();
+            humiwarn.setContent("Abnormal Location data increase"+locpersentage+"%");
+            humiwarn.setTime(String.valueOf(currentTime));
+            humiwarn.setType("Warning");
+            warnMapper.insert(humiwarn);
+        }
+    }
+    else if(loccount[3]<loccount[2]){
+        double locpersentage= (double)(loccount[2]-loccount[3])/loccount[2]*100;
+        all3.setAll("Location",locnumber,locpersentage+"%",false,true,labels,locdataset);
+        if(locpersentage>200){
+            Warn humiwarn=new Warn();
+            humiwarn.setContent("Abnormal Location data decrease"+locpersentage+"%");
+            humiwarn.setTime(String.valueOf(currentTime));
+            humiwarn.setType("Warning");
+            warnMapper.insert(humiwarn);
+        }
+    }
+    else{
+        all3.setAll("Location",locnumber,"0%",true,false,labels,locdataset);
+    }
+
+
+      AllChart []all= {all1,all2,all3};
 
 
     Map<String, Object> map = new HashMap<>(2);
@@ -62,30 +174,142 @@ public JsonResult getsmallchart (){
     public JsonResult getsessionchart (String type, String starttime,String endtime){
         JsonResult r=new JsonResult();
         SessionChart chart=new SessionChart();
+        Date date = new Date();
+        long currentTime = System.currentTimeMillis() ;
+        //long lastdatyTime=currentTime-24*60*60*1000;
+        int hours = date.getHours();
+        ArrayList<String> la=new ArrayList<>();
+        ArrayList<Integer>da1=new ArrayList<>();
+        ArrayList<Integer>da2=new ArrayList<>();
+//        String []labels=new String[50];
+//        Integer []data1= new Integer[50];
+//        Integer []data2= new Integer[50];
+        String data1Tag="";
+        String data2Tag="";
 
-        String []labels={"09:00 PM",
-                "10:00 PM",
-                "11:00 PM",
-                "12:00 PM",
-                "13:00 PM",
-                "14:00 PM",
-                "15:00 PM",
-                "16:00 PM",
-                "17:00 PM"};
-        SessionDataset datas1=new SessionDataset();
-        SessionDataset datas2=new SessionDataset();
-        Integer[] data1={1,0, 10, 30, 10, 42, 5, 15, 5};
-        Integer[] data2={5,23, 5, 10, 5, 5, 30, 2, 10};
 
-        datas1.setAll(data1,"Today","start","rgba(0,123,255,0.1)","rgba(0,123,255,1)", "#ffffff","rgba(0,123,255,1)",1.5);
-        if(!starttime.equals("1")){
-            datas2.setAll(data2,"Yesterday","start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
 
-        }else{
-            datas2.setAll(data2,"OOOOOO","start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
+        if(type.equals("Humidity")){
+            if(starttime.equals("") || endtime.equals("") ||starttime.equals("0") ||endtime.equals("0") ){
+                data1Tag="Today";
+                data2Tag="Yesterday";
 
+                for(int i=0;i<hours;i++){
+                    la.add(i+":00");
+//                    la[i]=i+":00";
+                    long start=currentTime-(hours-i)*60*60*1000;
+                    long end=currentTime-(hours-1-i)*60*60*1000;
+                    long laststart=start-24*60*60*1000;
+                    long lastend=end-24*60*60*1000;
+                    da1.add(humidityMapper.selectTopByTime(String.valueOf(start),String.valueOf(end)).getHumidity().intValue());
+                    da2.add(humidityMapper.selectTopByTime(String.valueOf(laststart),String.valueOf(lastend)).getHumidity().intValue());
+
+
+                }
+//                Integer[] data1=humidity;
+//                Integer[] data2=oldhumidity;
+            }
+            else{
+
+//                Integer []highesthumidity= new Integer[50];
+//                Integer []lowesthumidity= new Integer[50];
+                data1Tag="Highest Humidity";
+                data2Tag="Lowest Humidity";
+                long time = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse("2018-06-30 20:00:00", new ParsePosition(0)).getTime();
+                String start=starttime.split("T")[0]+" 00:00:00";
+                String end=endtime.split("T")[0]+" 23:59:59";
+                long stamp1=(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(start, new ParsePosition(0)).getTime()+24*60*60*1000;
+                long stamp2=(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(end, new ParsePosition(0)).getTime()+24*60*60*1000;
+                long startstamp=stamp1-150*60*1000;
+                long endstamp=stamp2-150*60*1000;
+                int i=0;
+                for(long j=startstamp;j<endstamp;j=j+24*60*60*1000){
+                    da1.add(humidityMapper.selectHighestByTime(String.valueOf(j),String.valueOf(j+24*60*60*1000)).getHumidity().intValue());
+                    da2.add(humidityMapper.selectLowestByTime(String.valueOf(j),String.valueOf(j+24*60*60*1000)).getHumidity().intValue());
+//                    double time2 = 1515730332000d;
+//                    String result2 = new SimpleDateFormat("yyyy-MM-dd").format(j+150*60*1000);
+//                    System.out.println("13位数的时间戳（毫秒）--->Date:" + result2);
+                    la.add(new SimpleDateFormat("yyyy-MM-dd").format(j+151*60*1000));
+                    i++;
+                }
+           }
 
         }
+        else{
+
+            if(starttime.equals("") || endtime.equals("") ||starttime.equals("0") ||endtime.equals("0") ){
+                data1Tag="Today";
+                data2Tag="Yesterday";
+
+                for(int i=0;i<hours;i++){
+                    la.add(i+":00");
+//                    la[i]=i+":00";
+                    long start=currentTime-(hours-i)*60*60*1000;
+                    long end=currentTime-(hours-1-i)*60*60*1000;
+                    long laststart=start-24*60*60*1000;
+                    long lastend=end-24*60*60*1000;
+                    da1.add(temperatureMapper.selectTopByTime(String.valueOf(start),String.valueOf(end)).getTemperature().intValue());
+                    da2.add(temperatureMapper.selectTopByTime(String.valueOf(laststart),String.valueOf(lastend)).getTemperature().intValue());
+
+
+                }
+//                Integer[] data1=humidity;
+//                Integer[] data2=oldhumidity;
+            }
+            else{
+
+//                Integer []highesthumidity= new Integer[50];
+//                Integer []lowesthumidity= new Integer[50];
+                data1Tag="Highest Temperature";
+                data2Tag="Lowest Temperature";
+                long time = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse("2018-06-30 20:00:00", new ParsePosition(0)).getTime();
+                String start=starttime.split("T")[0]+" 00:00:00";
+                String end=endtime.split("T")[0]+" 23:59:59";
+                long stamp1=(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(start, new ParsePosition(0)).getTime()+24*60*60*1000;
+                long stamp2=(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(end, new ParsePosition(0)).getTime()+24*60*60*1000;
+                long startstamp=stamp1-150*60*1000;
+                long endstamp=stamp2-150*60*1000;
+                int i=0;
+                for(long j=startstamp;j<endstamp;j=j+24*60*60*1000){
+                    da1.add(temperatureMapper.selectHighestByTime(String.valueOf(j),String.valueOf(j+24*60*60*1000)).getTemperature().intValue());
+                    da2.add(temperatureMapper.selectLowestByTime(String.valueOf(j),String.valueOf(j+24*60*60*1000)).getTemperature().intValue());
+//                    double time2 = 1515730332000d;
+//                    String result2 = new SimpleDateFormat("yyyy-MM-dd").format(j+150*60*1000);
+//                    System.out.println("13位数的时间戳（毫秒）--->Date:" + result2);
+                    la.add(new SimpleDateFormat("yyyy-MM-dd").format(j+151*60*1000));
+                    i++;
+                }
+            }
+        }
+
+//        String []labels={"09:00 PM",
+//                "10:00 PM",
+//                "11:00 PM",
+//                "12:00 PM",
+//                "13:00 PM",
+//                "14:00 PM",
+//                "15:00 PM",
+//                "16:00 PM",
+//                "17:00 PM"};
+        String []labels=la.toArray(new String[la.size()]);
+
+Integer []data1= da1.toArray(new Integer[da1.size()]);
+        Integer []data2= da2.toArray(new Integer[da2.size()]);
+//        Integer []data2= new Integer[50];
+        SessionDataset datas1=new SessionDataset();
+        SessionDataset datas2=new SessionDataset();
+//        Integer[] data1={1,0, 10, 30, 10, 42, 5, 15, 5};
+//        Integer[] data2={5,23, 5, 10, 5, 5, 30, 2, 10};
+
+        datas1.setAll(data1,data1Tag,"start","rgba(0,123,255,0.1)","rgba(0,123,255,1)", "#ffffff","rgba(0,123,255,1)",1.5);
+//        if(!starttime.equals("1")){
+            datas2.setAll(data2,data2Tag,"start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
+//
+//        }else{
+//            datas2.setAll(data2,"OOOOOO","start","rgba(255,65,105,0.1)","rgba(255,65,105,1)", "#ffffff","rgba(255,65,105,1)",1.5);
+
+
+        //}
 
         SessionDataset [] dataset={datas1,datas2};
         chart.setAll(labels,dataset);
